@@ -1,0 +1,27 @@
+/**
+ * Blocks Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss which makes it higher in priority
+ */
+
+/* RadioControl */
+.gamipress-inspector-controls .components-radio-control__option label {
+  display: inline-block;
+}
+
+.gamipress-inspector-controls .components-radio-control__option label img {
+  height: 45px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+/* AsyncSelect */
+.gamipress-inspector-controls .gamipress-result .gamipress-result-description {
+  display: block;
+  color: #aaaaaa;
+}
+
+.gamipress-inspector-controls .gamipress-result .gamipress-result-description .align-right {
+  float: right;
+}
