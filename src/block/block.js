@@ -29,6 +29,7 @@ const {
     RadioControl,
     SelectControl,
     TextControl,
+    TextareaControl ,
 } = wp.components;
 
 // Custom vars
@@ -43,7 +44,7 @@ Object.keys(gamipress_blocks.shortcodes).map(function( slug ) {
 
     // Block name requires to be a prefix/block-slug
     // So let's turn gamipress_points_types to gamipress/points-types
-    let block_name = shortcode.slug.replace( 'gamipress_', 'gamipress/' ).replace( '_', '-' );
+    let block_name = shortcode.slug.replace( 'gamipress_', 'gamipress/' ).replace( new RegExp('_', 'g'), '-' );
 
     /**
      * Register a GamiPress shortcode as a Gutenberg block
@@ -67,25 +68,27 @@ Object.keys(gamipress_blocks.shortcodes).map(function( slug ) {
 
             const { name, attributes, setAttributes, className } = props;
 
-            let slug = className.replace( 'wp-block-gamipress-', 'gamipress_' ).replace( '-', '_' );
+            let slug = className.replace( 'wp-block-gamipress-', 'gamipress_' ).replace( new RegExp('-', 'g'), '_' );
             let shortcode = gamipress_blocks.shortcodes[slug];
             let form = [];
             let fields = [];
+            let tabs_ids = Object.keys(shortcode.tabs);
 
-            if( Object.keys(shortcode.tabs).length ) {
+            if( tabs_ids.length ) {
 
                 // Render the form with tabs (as PanelBody elements)
-                Object.keys(shortcode.tabs).map(function( tab_id ) {
+                tabs_ids.map(function( tab_id ) {
 
                     let tab = shortcode.tabs[tab_id];
 
                     // Render tab fields
                     Object.keys(tab.fields).forEach(function( i ) {
-                        let field = shortcode.fields[tab.fields[i]];
+                        let field_id = tab.fields[i];
+                        let field = shortcode.fields[field_id];
 
                         // Avoid issues with removed fields that keep their id on a tab
                         if( field !== undefined ) {
-                            field.id = tab.fields[i];
+                            field.id = field_id;
 
                             fields.push( gamipress_blocks_get_field_html( field, props ) );
                         }
@@ -149,6 +152,7 @@ Object.keys(gamipress_blocks.shortcodes).map(function( slug ) {
  * Get the icon identifier or SVG from a given identifier
  *
  * @since   1.0.0
+ * @updated 1.0.1 Take icons from server side localized vars
  *
  * @param  {string}   icon      Icon identifier
  *
@@ -159,20 +163,9 @@ function gamipress_blocks_get_icon( icon ) {
     if( icon === undefined )
         icon = 'gamipress';
 
-    if( icon === 'gamipress' ) {
-        return (
-            <svg width="24" height="24" viewBox="0 0 167.548 167.548" xmlns="http://www.w3.org/2000/svg" >
-                <path d="M 131.973,136.242 H 35.596 L 8.108,57.111 42.507,82.363 c -0.172,0.873 -0.264,1.727 -0.264,2.584 0,7.815 6.359,14.175 14.175,14.175 7.812,0 14.175,-6.359 14.175,-14.175 0,-6.091 -3.797,-11.274 -9.273,-13.255 l 22.465,-47.363 22.396,47.239 c -5.627,1.898 -9.629,7.193 -9.629,13.384 0,7.815 6.359,14.175 14.175,14.175 7.81,0 14.175,-6.359 14.175,-14.175 0,-1.036 -0.121,-2.077 -0.364,-3.103 l 34.984,-24.922 z"/>
-            </svg>
-        );
-    } else if( icon === 'rank' ) {
-        return (
-            <svg width="24" height="24" viewBox="0 0 92.275001 92.275002" xmlns="http://www.w3.org/2000/svg" >
-                <polygon points="50.1,96.2 76.2,81.3 76.2,66.5 50.1,81.3 24.1,66.5 24.1,81.3" transform="translate(-4.1,-3.9250045)"/>
-                <polygon points="50.1,74.5 76.2,59.7 76.2,44.8 50.1,59.7 24.1,44.8 24.1,59.7" transform="translate(-4.1,-3.9250045)"/>
-                <path d="M 47,0.67499541 52.6,11.974994 c 0.2,0.3 0.5,0.5 0.8,0.6 l 12.5,1.8 c 0.9,0.1 1.3,1.2 0.6,1.9 l -9,8.8 c -0.3,0.3 -0.4,0.6 -0.3,1 l 2.1,12.5 c 0.2,0.9 -0.8,1.6 -1.6,1.2 l -11.2,-5.9 c -0.3,-0.2 -0.7,-0.2 -1,0 l -11.2,5.9 c -0.8,0.4 -1.7,-0.3 -1.6,-1.2 l 2.2,-12.5 c 0.1,-0.4 -0.1,-0.7 -0.3,-1 l -9.1,-8.8 c -0.7,-0.6 -0.3,-1.7 0.6,-1.9 l 12.5,-1.8 c 0.4,-0.1 0.7,-0.3 0.8,-0.6 L 45,0.67499541 c 0.5,-0.9 1.6,-0.9 2,0 z"/>
-            </svg>
-        );
+    // Check if icon has been registered (check gamipress_get_block_icons() function)
+    if( gamipress_blocks.icons[icon] !== undefined ) {
+        return ( <span dangerouslySetInnerHTML={{__html: gamipress_blocks.icons[icon]}}></span> ) ;
     }
 
     return icon;
@@ -264,6 +257,11 @@ function gamipress_blocks_get_field_html( field, props ) {
 
     }
 
+    // Allow HTML on field help
+    if( field_args.help !== undefined && field_args.help.length ) {
+        field_args.help = ( <span dangerouslySetInnerHTML={{__html: field_args.help}}></span> )
+    }
+
     // Generate the field HTML
     let field_html = createElement(
         gamipress_blocks_get_field_control( field ),
@@ -330,6 +328,8 @@ function gamipress_blocks_get_field_control( field ) {
             } else {
                 return TextControl;
             }
+        case 'textarea':
+            return TextareaControl;
         default:
             return TextControl;
     }
