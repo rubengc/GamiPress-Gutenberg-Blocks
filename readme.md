@@ -23,6 +23,10 @@ npm run build
 
 ## Changelog ##
 
+### 1.0.2 ###
+
+* Added support to 'relation' index on field 'conditions' argument.
+
 ### 1.0.1 ###
 
 * Use block icons given from server.

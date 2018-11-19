@@ -604,7 +604,19 @@ function gamipress_blocks_is_visible( field, attributes ) {
 
     if( field.conditions !== undefined ) {
 
+        let relation = 'AND';
+
+        if( field.conditions.relation !== undefined && field.conditions.relation.toUpperCase() === 'OR' ) {
+            relation = 'OR';
+            is_visible = false; // Initialize is_visible as false since relation is less restrictive
+        }
+
         Object.keys(field.conditions).map(function( field_id ) {
+
+            // Skip relation index
+            if( field_id === 'relation' && attributes[field_id] === undefined ) {
+                return true;
+            }
 
             // By default, get values as is a field has been defined in short way as:
             // array(
@@ -636,23 +648,42 @@ function gamipress_blocks_is_visible( field, attributes ) {
                 case '=':
                 case '==':
                 case '===':
-                    is_visible = is_visible && ( value === required_value );
+                    if( relation === 'OR' )
+                        is_visible = is_visible || ( value === required_value );
+                    else
+                        is_visible = is_visible && ( value === required_value );
                     break;
                 case '!=':
                 case '!==':
-                    is_visible = is_visible && ( value !== required_value );
+                    if( relation === 'OR' )
+                        is_visible = is_visible || ( value !== required_value );
+                    else
+                        is_visible = is_visible && ( value !== required_value );
                     break;
                 case '>':
-                    is_visible = is_visible && ( value > required_value );
+                    if( relation === 'OR' )
+                        is_visible = is_visible || ( value > required_value );
+                    else
+                        is_visible = is_visible && ( value > required_value );
                     break;
                 case '<':
-                    is_visible = is_visible && ( value < required_value );
+                    if( relation === 'OR' )
+                        is_visible = is_visible || ( value < required_value );
+                    else
+                        is_visible = is_visible && ( value < required_value );
                     break;
                 case '>=':
+                    if( relation === 'OR' )
+                        is_visible = is_visible || ( value >= required_value );
+                    else
+                        is_visible = is_visible && ( value >= required_value );
                     is_visible = is_visible && ( value >= required_value );
                     break;
                 case '<=':
-                    is_visible = is_visible && ( value <= required_value );
+                    if( relation === 'OR' )
+                        is_visible = is_visible || ( value <= required_value );
+                    else
+                        is_visible = is_visible && ( value <= required_value );
                     break;
             }
 
