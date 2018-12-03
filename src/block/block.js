@@ -22,6 +22,7 @@ const { apiFetch } = wp;
 const { addQueryArgs } = wp.url;
 const {
     ServerSideRender,
+    Panel,
     PanelBody,
     PanelRow,
     BaseControl,
@@ -82,8 +83,7 @@ Object.keys(gamipress_blocks.shortcodes).map(function( slug ) {
                     let tab = shortcode.tabs[tab_id];
 
                     // Render tab fields
-                    Object.keys(tab.fields).forEach(function( i ) {
-                        let field_id = tab.fields[i];
+                    tab.fields.map(function( field_id ) {
                         let field = shortcode.fields[field_id];
 
                         // Avoid issues with removed fields that keep their id on a tab
@@ -100,6 +100,9 @@ Object.keys(gamipress_blocks.shortcodes).map(function( slug ) {
                             {fields}
                         </PanelBody>
                     );
+
+                    // Clear the fields var after render it
+                    fields = [];
 
                 })
 
@@ -278,8 +281,8 @@ function gamipress_blocks_get_field_html( field, props ) {
 
     if( requires_row ) {
 
-        // Return the field HTML wrapped on an BaseControl element
-        return createElement(
+        // Wrap field HTML on an BaseControl element
+        field_html = createElement(
             BaseControl,
             field_args,
             field_html
@@ -287,8 +290,12 @@ function gamipress_blocks_get_field_html( field, props ) {
 
     }
 
-    // Return the field HTML
-    return field_html;
+    // Return the field HTML wrapped on a PanelRow element
+    return createElement(
+        PanelRow,
+        { className: className + ' ' +  className + '-' + field.id + '-row' },
+        field_html
+    );
 
 }
 

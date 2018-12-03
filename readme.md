@@ -23,6 +23,13 @@ npm run build
 
 ## Changelog ##
 
+### 1.0.3 ###
+
+* HTML improvements following the Gutenberg structure of PanelBody > PanelRow.
+* Improvements on tabs fields loop.
+* Added GamiPress front-end styles to editor styles.
+* Fixed repeated fields rendering on tabs.
+
 ### 1.0.2 ###
 
 * Added support to 'relation' index on field 'conditions' argument.
