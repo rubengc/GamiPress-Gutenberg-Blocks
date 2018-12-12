@@ -57,7 +57,7 @@ function gamipress_gutenberg_blocks_block_assets() {
     wp_enqueue_style(
         'gamipress-blocks-style-css',
         plugins_url( 'dist/blocks.style.build.css', dirname( __FILE__ ) ),
-        array( 'wp-blocks' ),
+        array(),
         GAMIPRESS_GUTEMBERG_BLOCKS_VER
     );
 

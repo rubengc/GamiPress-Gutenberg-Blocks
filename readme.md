@@ -23,6 +23,10 @@ npm run build
 
 ## Changelog ##
 
+### 1.0.4 ###
+
+* Removed wp-blocks dependency on front-end assets.
+
 ### 1.0.3 ###
 
 * HTML improvements following the Gutenberg structure of PanelBody > PanelRow.
