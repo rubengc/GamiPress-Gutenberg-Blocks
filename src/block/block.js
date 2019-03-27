@@ -30,7 +30,8 @@ const {
     RadioControl,
     SelectControl,
     TextControl,
-    TextareaControl ,
+    TextareaControl,
+    ColorPalette,
 } = wp.components;
 
 // Custom vars
@@ -199,11 +200,12 @@ function gamipress_blocks_get_field_html( field, props ) {
     }
 
     // Common field args
-    field_args.id       = field.id;
-    field_args.label    = field.name;
-    field_args.help     = ( field.description !== undefined ? field.description : field.desc );
-    field_args.value    = gamipress_blocks_get_field_value( field, attributes );
-    field_args.onChange = ( value ) => setAttributes({ [field.id]: value });
+    field_args.id           = field.id;
+    field_args.label        = field.name;
+    field_args.help         = ( field.description !== undefined ? field.description : field.desc );
+    field_args.value        = gamipress_blocks_get_field_value( field, attributes );
+    field_args.className    = 'gamipress-field-type-' + field.type.replace( new RegExp('_', 'g'), '-' );
+    field_args.onChange     = ( value ) => setAttributes({ [field.id]: value });
 
     if( field.type === 'checkbox' ) {
 
@@ -277,6 +279,8 @@ function gamipress_blocks_get_field_html( field, props ) {
         ( ( field.type === 'select' || field.type === 'advanced_select' ) && ( field.multiple !== undefined && field.multiple ) )
         // AsyncSelect requires row
         || ( field.type === 'post' || field.type === 'user' )
+        // ColorPalette requires row
+        || field.type === 'colorpicker'
     );
 
     if( requires_row ) {
@@ -329,6 +333,8 @@ function gamipress_blocks_get_field_control( field ) {
         case 'post':
         case 'user':
             return AsyncSelect;
+        case 'colorpicker':
+            return ColorPalette;
         case 'radio':
             if( field.options !== undefined && Object.keys(field.options).length ) {
                 return RadioControl;
@@ -445,7 +451,7 @@ function gamipress_blocks_get_field_value( field, attributes ) {
 
 /**
  * Helper function to build a option object from the item value give
- * Note. This function is user for AsyncSelect component mainly
+ * Note: This function is user for AsyncSelect component mainly
  *
  * @since   1.0.0
  *

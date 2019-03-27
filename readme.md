@@ -23,6 +23,12 @@ npm run build
 
 ## Changelog ##
 
+### 1.0.5 ###
+
+* Make React-Select fields full width.
+* Added support for color pickers (using the ColorPalette control) at this moment without alpha support.
+* Added the class gamipress-field-type-{field_type} to each field.
+
 ### 1.0.4 ###
 
 * Removed wp-blocks dependency on front-end assets.
