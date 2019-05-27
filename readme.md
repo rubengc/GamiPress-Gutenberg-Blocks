@@ -23,6 +23,10 @@ npm run build
 
 ## Changelog ##
 
+### 1.0.6 ###
+
+* Force React-Select fields value to string.
+
 ### 1.0.5 ###
 
 * Make React-Select fields full width.

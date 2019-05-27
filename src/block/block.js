@@ -248,9 +248,10 @@ function gamipress_blocks_get_field_html( field, props ) {
 
         } else {
 
-            // get the 'value' key from selected option
+            // Get the 'value' key from selected option
             field_args.onChange = ( value ) => setAttributes({
-                [field.id]: ( value ? value.value : null )
+                // Note: For single post/user selector value is stored as integer, so an empty string is appended as fix
+                [field.id]: ( value ? value.value + '' : null )
             });
         }
 
