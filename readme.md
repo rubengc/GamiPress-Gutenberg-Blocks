@@ -23,6 +23,10 @@ npm run build
 
 ## Changelog ##
 
+### 1.0.7 ###
+
+* On field conditions added support to array values.
+
 ### 1.0.6 ###
 
 * Force React-Select fields value to string.

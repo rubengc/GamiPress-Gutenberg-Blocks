@@ -658,47 +658,47 @@ function gamipress_blocks_is_visible( field, attributes ) {
 
             }
 
+            let comparison = undefined;
+
             switch( compare ) {
                 case '=':
                 case '==':
                 case '===':
-                    if( relation === 'OR' )
-                        is_visible = is_visible || ( value === required_value );
+                case 'in':
+                case 'IN':
+                    if( Array.isArray( required_value ) )
+                        comparison = ( required_value.indexOf( value ) !== -1 ); // Check if value is on array of allowed values
                     else
-                        is_visible = is_visible && ( value === required_value );
+                        comparison = ( value === required_value );
                     break;
                 case '!=':
                 case '!==':
-                    if( relation === 'OR' )
-                        is_visible = is_visible || ( value !== required_value );
+                case 'not in':
+                case 'NOT IN':
+                    if( Array.isArray( required_value ) )
+                        comparison = ( required_value.indexOf( value ) === -1 ); // Check if value is not on array of allowed values
                     else
-                        is_visible = is_visible && ( value !== required_value );
+                        comparison = ( value !== required_value );
                     break;
                 case '>':
-                    if( relation === 'OR' )
-                        is_visible = is_visible || ( value > required_value );
-                    else
-                        is_visible = is_visible && ( value > required_value );
+                    comparison = ( value > required_value );
                     break;
                 case '<':
-                    if( relation === 'OR' )
-                        is_visible = is_visible || ( value < required_value );
-                    else
-                        is_visible = is_visible && ( value < required_value );
+                    comparison = ( value < required_value );
                     break;
                 case '>=':
-                    if( relation === 'OR' )
-                        is_visible = is_visible || ( value >= required_value );
-                    else
-                        is_visible = is_visible && ( value >= required_value );
-                    is_visible = is_visible && ( value >= required_value );
+                    comparison = ( value >= required_value );
                     break;
                 case '<=':
-                    if( relation === 'OR' )
-                        is_visible = is_visible || ( value <= required_value );
-                    else
-                        is_visible = is_visible && ( value <= required_value );
+                    comparison = ( value <= required_value );
                     break;
+            }
+
+            if( comparison !== undefined ) {
+                if( relation === 'OR' )
+                    is_visible = is_visible || comparison;
+                else
+                    is_visible = is_visible && comparison;
             }
 
         });
