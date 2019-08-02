@@ -23,6 +23,11 @@ npm run build
 
 ## Changelog ##
 
+### 1.0.8 ###
+
+* New component: MultiCheckboxControl (works equal than RadioControl but with checkboxes).
+* Added support for multicheck fields through MultiCheckboxControl.
+
 ### 1.0.7 ###
 
 * On field conditions added support to array values.
