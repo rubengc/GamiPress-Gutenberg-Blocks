@@ -8,7 +8,6 @@
 /**
  * External dependencies
  */
-import { isEmpty } from 'lodash';
 import classnames from 'classnames';
 
 /**
@@ -40,7 +39,7 @@ const MultiCheckboxControl = ( { label, className, selected, help, instanceId, o
         onChange( selectedOptions );
     };
 
-    return ! isEmpty( options ) && (
+    return Array.isArray( options ) && options.length && (
         <BaseControl label={ label } id={ id } help={ help } className={ classnames( className, 'components-multicheckbox-control' ) }>
             { options.map( ( option, index ) =>
                 <div

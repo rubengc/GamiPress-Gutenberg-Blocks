@@ -11,7 +11,7 @@ import './editor.scss';
 // React dependencies
 import React from 'react';
 import Select from 'react-select';
-import AsyncSelect from 'react-select/lib/Async';
+import AsyncSelect from 'react-select/async';
 
 // MultiCheckboxControl
 import MultiCheckboxControl from '../components/multicheckbox-control';

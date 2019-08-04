@@ -23,6 +23,11 @@ npm run build
 
 ## Changelog ##
 
+### 1.0.9 ###
+
+* Remove lodash usage to avoid functions conflicts.
+* Updated all project dependencies to latest stable releases.
+
 ### 1.0.8 ###
 
 * New component: MultiCheckboxControl (works equal than RadioControl but with checkboxes).
