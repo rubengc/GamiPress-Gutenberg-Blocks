@@ -657,7 +657,28 @@ function gamipress_blocks_is_visible( field, attributes ) {
             let value = attributes[field_id];
             let compare = '=';
 
-            // Check if condition has been defined as:
+            // Check if condition has been defined as Object:
+            // {
+            //      field_id: '',
+            //      value: '',
+            //      compare: '',
+            // }
+            if( required_value instanceof Object && required_value.hasOwnProperty('field_id') ) {
+
+                // Update the condition parameters
+                field_id = required_value.field_id;
+
+                // If isset the compare key then update the compare operator
+                if( required_value.hasOwnProperty('compare') )
+                    compare = required_value.compare;
+
+                // Update required value and value
+                required_value = required_value.value;
+                value = attributes[field_id]; // Refresh values since field id has been updated
+
+            }
+
+            // Check if condition has been defined as Array:
             // array(
             //      'field_id' => '',
             //      'value' => '',
@@ -665,13 +686,16 @@ function gamipress_blocks_is_visible( field, attributes ) {
             // )
             if( Array.isArray( required_value ) && required_value['field_id'] !== undefined ) {
 
+                // Update the condition parameters
                 field_id = required_value['field_id'];
+
+                // If isset the compare key then update the compare operator
+                if( required_value['compare'] !== undefined )
+                    compare = required_value['compare'];
+
+                // Update required value and value
                 required_value = required_value['value'];
                 value = attributes[field_id]; // Refresh values since field id has been updated
-
-                if( required_value['compare'] !== undefined ) {
-                    compare = required_value['compare'];
-                }
 
             }
 

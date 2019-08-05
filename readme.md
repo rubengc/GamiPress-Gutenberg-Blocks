@@ -23,6 +23,12 @@ npm run build
 
 ## Changelog ##
 
+### 1.1.0 ###
+
+* Fixed issue on conditions functionality when passing an array to define the condition.
+* Added support for Javascript objects conditions.
+* Updated project dependencies.
+
 ### 1.0.9 ###
 
 * Remove lodash usage to avoid functions conflicts.
