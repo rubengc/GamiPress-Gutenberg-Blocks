@@ -240,6 +240,7 @@ function gamipress_blocks_get_field_html( field, props ) {
 
         // AsyncSelect
         field_args.isMulti = ( field.multiple !== undefined ? field.multiple : false );
+        field_args.defaultOptions = true;
         field_args.loadOptions = ( value, callback ) => {
             gamipress_blocks_load_options( field, value, callback );
         };

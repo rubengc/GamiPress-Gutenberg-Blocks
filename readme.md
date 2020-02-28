@@ -23,6 +23,10 @@ npm run build
 
 ## Changelog ##
 
+### 1.1.1 ###
+
+* Make async select load a set of default options.
+
 ### 1.1.0 ###
 
 * Fixed issue on conditions functionality when passing an array to define the condition.
