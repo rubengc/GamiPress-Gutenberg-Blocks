@@ -25,6 +25,9 @@ npm run build
 
 ### 1.1.1 ###
 
+* Fixed issue that prevent RadioControl changes.
+* Ensure to use the field default value if field value is not set.
+* Make conditions able to work with checkboxes.
 * Make async select load a set of default options.
 
 ### 1.1.0 ###

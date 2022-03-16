@@ -6,11 +6,6 @@
  */
 
 /**
- * External dependencies
- */
-import classnames from 'classnames';
-
-/**
  * WordPress dependencies
  */
 const { BaseControl } = wp.components;
@@ -40,7 +35,7 @@ const MultiCheckboxControl = ( { label, className, selected, help, instanceId, o
     };
 
     return Array.isArray( options ) && options.length && (
-        <BaseControl label={ label } id={ id } help={ help } className={ classnames( className, 'components-multicheckbox-control' ) }>
+        <BaseControl label={ label } id={ id } help={ help } className={ className + 'components-multicheckbox-control' }>
             { options.map( ( option, index ) =>
                 <div
                     key={ `${ id }-${ index }` }

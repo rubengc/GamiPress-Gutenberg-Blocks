@@ -3,7 +3,7 @@
  * Plugin Name:           GamiPress - Gutenberg Blocks
  * Plugin URI:            https://github.com/rubengc/GamiPress-Gutenberg-Blocks
  * Description:           GamiPress blocks for Gutenberg.
- * Version:               1.1.0
+ * Version:               1.1.1
  * Author:                GamiPress
  * Author URI:            https://gamipress.com/
  * Text Domain:           gamipress-gutenberg-blocks
@@ -53,7 +53,7 @@ final class GamiPress_Gutenberg_Blocks {
      */
     private function constants() {
         // Plugin version
-        define( 'GAMIPRESS_GUTEMBERG_BLOCKS_VER', '1.1.0' );
+        define( 'GAMIPRESS_GUTEMBERG_BLOCKS_VER', '1.1.1' );
 
         // Plugin path
         define( 'GAMIPRESS_GUTEMBERG_BLOCKS_DIR', plugin_dir_path( __FILE__ ) );

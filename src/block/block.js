@@ -14,7 +14,7 @@ import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 
 // MultiCheckboxControl
-import MultiCheckboxControl from '../components/multicheckbox-control';
+import MultiCheckboxControl from './../components/multicheckbox-control';
 
 // WordPress dependencies
 const { __ } = wp.i18n;
@@ -95,7 +95,7 @@ Object.keys(gamipress_blocks.shortcodes).map(function( slug ) {
                         if( field !== undefined ) {
                             field.id = field_id;
 
-                            fields.push( gamipress_blocks_get_field_html( field, props ) );
+                            fields.push( gamipress_blocks_get_field_html( field, props, shortcode ) );
                         }
                     });
 
@@ -121,11 +121,11 @@ Object.keys(gamipress_blocks.shortcodes).map(function( slug ) {
                     if( field !== undefined ) {
                         field.id = field_id;
 
-                        fields.push( gamipress_blocks_get_field_html( field, props ) );
+                        fields.push( gamipress_blocks_get_field_html( field, props, shortcode ) );
                     }
                 });
 
-                // Add fields to a PanelBoddy
+                // Add fields to a PanelBody
                 form.push(
                     <PanelBody title={ __( 'Settings' ) }>
                         {fields}
@@ -187,10 +187,11 @@ function gamipress_blocks_get_icon( icon ) {
  *
  * @param  {Object}   field     Field object
  * @param  {Object}   props     Block properties
+ * @param  {Object}   shortcode Shortcode object
  *
  * @return {string}             Field HTML
  */
-function gamipress_blocks_get_field_html( field, props ) {
+function gamipress_blocks_get_field_html( field, props, shortcode ) {
 
     // Init field HTML
     let field_html = [];
@@ -202,7 +203,7 @@ function gamipress_blocks_get_field_html( field, props ) {
     let field_args = {};
 
     // Check field visibility
-    if( ! gamipress_blocks_is_visible( field, attributes ) ) {
+    if( ! gamipress_blocks_is_visible( field, attributes, shortcode ) ) {
         return '';
     }
 
@@ -210,9 +211,13 @@ function gamipress_blocks_get_field_html( field, props ) {
     field_args.id           = field.id;
     field_args.label        = field.name;
     field_args.help         = ( field.description !== undefined ? field.description : field.desc );
-    field_args.value        = gamipress_blocks_get_field_value( field, attributes );
-    field_args.className    = 'gamipress-field-type-' + field.type.replace( new RegExp('_', 'g'), '-' );
+    field_args.className    = 'gamipress-field-type-' + field.type.replace( new RegExp('_', 'g'), '-' ) + ( field.classes !== undefined ? ' ' + field.classes : '' );
     field_args.onChange     = ( value ) => setAttributes({ [field.id]: value });
+
+	// Prevent to override value to radio controls
+	if( field.type !== 'radio' ) {
+		field_args.value = gamipress_blocks_get_field_value( field, attributes );
+	}
 
     if( field.type === 'checkbox' ) {
 
@@ -272,13 +277,13 @@ function gamipress_blocks_get_field_html( field, props ) {
             [field.id]: values.join(',')
         });
 
-        field_args.options = gamipress_blocks_get_field_options( field, true );
+        field_args.options 	= gamipress_blocks_get_field_options( field, true );
         field_args.selected = ( field_args.value === undefined && field.default !== undefined ? field.default : field_args.value );
 
     } else if( field.type === 'radio' && field.options !== undefined ) {
 
         // Radio
-        field_args.options = gamipress_blocks_get_field_options( field, true );
+        field_args.options 	= gamipress_blocks_get_field_options( field, true );
         field_args.selected = ( attributes[field.id] === undefined && field.default !== undefined ? field.default : attributes[field.id] );
 
     }
@@ -467,6 +472,16 @@ function gamipress_blocks_get_field_value( field, attributes ) {
 
     }
 
+	if( attributes[field.id] === undefined && field.default !== undefined ) {
+
+		// For checkbox, if default value is "yes", return true instead
+		if( field.type === 'checkbox' ) {
+			return field.default === 'yes';
+		}
+
+		return field.default;
+	}
+
     // Common field value
     return attributes[field.id];
 
@@ -627,10 +642,11 @@ function gamipress_blocks_load_options( field, value, callback ) {
  *
  * @param  {Object}   field         Field object
  * @param  {Object}   attributes    Block attributes
+ * @param  {Object}   shortcode    	Shortcode object
  *
  * @return {boolean}
  */
-function gamipress_blocks_is_visible( field, attributes ) {
+function gamipress_blocks_is_visible( field, attributes, shortcode ) {
 
     let is_visible = true;
 
@@ -655,7 +671,6 @@ function gamipress_blocks_is_visible( field, attributes ) {
             //      'field_id' => 'value',
             // )
             let required_value = field.conditions[field_id];
-            let value = attributes[field_id];
             let compare = '=';
 
             // Check if condition has been defined as Object:
@@ -675,8 +690,6 @@ function gamipress_blocks_is_visible( field, attributes ) {
 
                 // Update required value and value
                 required_value = required_value.value;
-                value = attributes[field_id]; // Refresh values since field id has been updated
-
             }
 
             // Check if condition has been defined as Array:
@@ -696,9 +709,11 @@ function gamipress_blocks_is_visible( field, attributes ) {
 
                 // Update required value and value
                 required_value = required_value['value'];
-                value = attributes[field_id]; // Refresh values since field id has been updated
-
             }
+
+			// Set the value to compare
+			let required_field = shortcode.fields[field_id];
+			let value = gamipress_blocks_get_field_value( required_field, attributes );
 
             let comparison = undefined;
 
