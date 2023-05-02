@@ -1,6 +1,6 @@
 {
-  "name": "gamipress-gutenberg-blocks",
-  "version": "1.1.1",
+  "name": "gamipress-gutenberg-blocks-cgb-guten-block",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "cgb-scripts start",
@@ -8,11 +8,7 @@
     "eject": "cgb-scripts eject"
   },
   "dependencies": {
-    "cgb-scripts": "^1.23.1",
-    "classnames": "^2.3.1",
-    "npm": "^8.5.4",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "cgb-scripts": "1.23.1",
     "react-select": "^5.2.2"
   }
 }

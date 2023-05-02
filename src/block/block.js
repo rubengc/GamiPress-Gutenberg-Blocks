@@ -24,7 +24,6 @@ const { createElement  } = wp.element;
 const { apiFetch } = wp;
 const { addQueryArgs } = wp.url;
 const {
-    ServerSideRender,
     Panel,
     PanelBody,
     PanelRow,
@@ -37,6 +36,8 @@ const {
     TextareaControl,
     ColorPalette,
 } = wp.components;
+
+const { serverSideRender: ServerSideRender } = wp;
 
 // Custom vars
 let posts_cache = [];
@@ -79,7 +80,7 @@ Object.keys(gamipress_blocks.shortcodes).map(function( slug ) {
             let form = [];
             let fields = [];
             let tabs_ids = Object.keys(shortcode.tabs);
-
+            
             if( tabs_ids.length ) {
 
                 // Render the form with tabs (as PanelBody elements)
@@ -133,7 +134,7 @@ Object.keys(gamipress_blocks.shortcodes).map(function( slug ) {
                 );
 
             }
-
+            
             return (
                 <div className={ className }>
                     <ServerSideRender
@@ -145,6 +146,7 @@ Object.keys(gamipress_blocks.shortcodes).map(function( slug ) {
                             {form}
                         </div>
                     </InspectorControls>
+                    
                 </div>
             );
         },
@@ -319,14 +321,13 @@ function gamipress_blocks_get_field_html( field, props, shortcode ) {
             field_html
         );
     }
-
     // Return the field HTML wrapped on a PanelRow element
     return createElement(
         PanelRow,
         { className: className + ' ' +  className + '-' + field.id + '-row' },
         field_html
     );
-
+    
 }
 
 /**

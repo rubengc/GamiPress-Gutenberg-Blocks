@@ -23,6 +23,10 @@ npm run build
 
 ## Changelog ##
 
+### 1.1.2 ###
+
+* Fixed issue with preview in backend.
+
 ### 1.1.1 ###
 
 * Fixed issue that prevent RadioControl changes.
